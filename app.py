@@ -1,6 +1,6 @@
 """Flask app for Cupcakes"""
 from flask import Flask, request, jsonify, render_template
-
+from forms import NewCupcakeForm
 from models import db, connect_db, Cupcake
 
 app = Flask(__name__)
@@ -10,6 +10,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = "secretkey"
 
 connect_db(app)
+
+@app.route('/')
+def home_page():
+    form = NewCupcakeForm()
+    return render_template("index.html", form=form)
 
 @app.route('/api/cupcakes')
 def get_cupcakes():
@@ -29,7 +34,12 @@ def create_cupcake():
     flavor = request.json["flavor"]
     size = request.json["size"]
     rating = request.json["rating"]
-    image = request.json.get("image")
+    image = request.json["image"]
+
+    print(image)
+
+    if not image:
+        image = "https://tinyurl.com/demo-cupcake"
 
     new_cupcake = Cupcake(flavor=flavor, size=size, rating=rating, image=image)
     db.session.add(new_cupcake)
