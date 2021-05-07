@@ -36,8 +36,6 @@ def create_cupcake():
     rating = request.json["rating"]
     image = request.json["image"]
 
-    print(image)
-
     if not image:
         image = "https://tinyurl.com/demo-cupcake"
 
